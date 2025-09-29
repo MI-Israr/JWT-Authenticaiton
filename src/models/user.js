@@ -17,11 +17,11 @@ const userSchema = new mongoose.Schema(
       maxLength: 50,
       trim: true,
     },
-    emailId: {
+    email: {
       type: String,
       required: true,
       lowercase: true,
-      unique: [true, { message: "duplicate email" }],
+      unique: true,
       trim: true,
       validate: [
         (v) => {
@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
     age: {
-      type: String,
+      type: Number,
       min: 18,
       trim: true,
     },
@@ -82,7 +82,9 @@ const userSchema = new mongoose.Schema(
 
 userSchema.methods.getJWT = async function () {
   const user = this;
-  const token = await jwt.sign({ id: user._id }, "1234", { expiresIn: "1d" });
+  const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
   return token;
 };
 

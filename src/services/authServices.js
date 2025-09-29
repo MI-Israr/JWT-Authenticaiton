@@ -4,27 +4,23 @@ import bcrypt from "bcrypt";
 export const signupServices = async ({
   firstName,
   lastName,
-  emailId,
+  email,
   password,
 }) => {
-  //pass hashing
   const passwordHash = await bcrypt.hash(password, 10);
-  //creating new instance
   const user = new User({
     firstName,
     lastName,
-    emailId,
+    email,
     password: passwordHash,
   });
-  // saving to db
   await user.save();
   const token = await user.getJWT();
-  //Add token to cookies and response back to user
   return { user, token };
 };
 
-export const loginServices = async ({ emailId, password }) => {
-  const user = await User.findOne({ emailId: emailId });
+export const loginServices = async ({ email, password }) => {
+  const user = await User.findOne({ email: email });
   if (!user) {
     throw new Error("invalid credentials");
   }
@@ -32,9 +28,7 @@ export const loginServices = async ({ emailId, password }) => {
   if (!validPassword) {
     throw new Error("invalid credentials");
   }
-  if (validPassword) {
-    ///Create JWT token
-    const token = await user.getJWT();
-  }
+  const token = await user.getJWT();
+
   return { user, token };
 };

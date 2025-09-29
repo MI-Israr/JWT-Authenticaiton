@@ -1,11 +1,11 @@
 import validator from "validator";
 
 export const signupValidate = (req) => {
-  const { firstName, lastName, emailId, password } = req.body;
+  const { firstName, lastName, email, password } = req.body;
 
   if (firstName == "" || lastName == "") {
     throw new Error("Please enter both First and Last name");
-  } else if (!validator.isEmail(emailId)) {
+  } else if (!validator.isEmail(email)) {
     throw new Error("Enter valid email");
   } else if (!validator.isStrongPassword(password)) {
     throw new Error("Please enter strong password");
@@ -13,11 +13,11 @@ export const signupValidate = (req) => {
 };
 
 export const loginValidate = (req) => {
-  const { emailId, password } = req.body;
-  if (emailId == "" || password == "") {
+  const { email, password } = req.body;
+  if (email == "" || password == "") {
     throw new Error("please enter email and password correctly");
   }
-  if (!validator.isEmail(emailId)) {
+  if (!validator.isEmail(email)) {
     throw new Error("Enter a valid email");
   }
 };
