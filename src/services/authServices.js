@@ -1,5 +1,6 @@
 import { User } from "../models/user.js";
 import bcrypt from "bcrypt";
+import { sendWelcomeEmail } from "../utils/mailer.js";
 
 export const signupServices = async ({
   firstName,
@@ -14,8 +15,11 @@ export const signupServices = async ({
     email,
     password: passwordHash,
   });
+
   await user.save();
   const token = await user.getJWT();
+  // Send welcome email
+  await sendWelcomeEmail(email, firstName);
   return { user, token };
 };
 
