@@ -1,6 +1,6 @@
 import { User } from "../models/user.js";
 import bcrypt from "bcrypt";
-import { sendWelcomeEmail } from "../utils/mailer.js";
+import { sendWelcomeEmail } from "../utils/sendWelcomeEmail.js";
 
 export const signupServices = async ({
   firstName,

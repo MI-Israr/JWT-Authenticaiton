@@ -24,9 +24,9 @@
 //         <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
 //           <h2 style="color: #4CAF50;">Hello ${userName},</h2>
 //           <p>Welcome to <b>MyApp</b>! 🎉 We're excited to have you on board 🚀</p>
-          
+
 //           <p style="margin-top: 15px;">
-//             Start exploring and enjoy your journey with us.  
+//             Start exploring and enjoy your journey with us.
 //             If you have any questions, feel free to reply to this email anytime.
 //           </p>
 
@@ -45,7 +45,6 @@
 //     console.error("❌ Error sending email:", error.message);
 //   }
 // };
-
 
 // utils/mailer.js
 import nodemailer from "nodemailer";
