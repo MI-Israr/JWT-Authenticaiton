@@ -94,4 +94,20 @@ userSchema.methods.validateUserPass = async function (userPass) {
   const validPassword = await bcrypt.compare(userPass, passwordHash);
   return validPassword;
 };
+
+// Generate Reset Token
+userSchema.methods.getResetPasswordToken = function () {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  // Hash it & save to DB
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 min
+
+  return resetToken; // return plain token for email
+};
+
 export const User = mongoose.model("User", userSchema);
