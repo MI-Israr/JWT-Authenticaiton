@@ -1,4 +1,3 @@
-// utils/mailer.js (same file or another)
 import { sendEmail } from "./mailer.js";
 
 export const sendWelcomeEmail = async (toEmail, userName) => {

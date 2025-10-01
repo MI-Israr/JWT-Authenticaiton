@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import validator from "validator";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -74,10 +75,10 @@ const userSchema = new mongoose.Schema(
         message: "you are adding more then 4 skills",
       },
     },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 userSchema.methods.getJWT = async function () {
@@ -97,17 +98,19 @@ userSchema.methods.validateUserPass = async function (userPass) {
 
 // Generate Reset Token
 userSchema.methods.getResetPasswordToken = function () {
+  // generate raw token
   const resetToken = crypto.randomBytes(32).toString("hex");
 
-  // Hash it & save to DB
+  // hash and set to DB
   this.resetPasswordToken = crypto
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
 
-  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 min
+  // expire in 15 mins
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
 
-  return resetToken; // return plain token for email
+  return resetToken; // return RAW token
 };
 
 export const User = mongoose.model("User", userSchema);
