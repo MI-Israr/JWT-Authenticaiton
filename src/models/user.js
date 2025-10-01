@@ -96,21 +96,17 @@ userSchema.methods.validateUserPass = async function (userPass) {
   return validPassword;
 };
 
-// Generate Reset Token
 userSchema.methods.getResetPasswordToken = function () {
-  // generate raw token
   const resetToken = crypto.randomBytes(32).toString("hex");
 
-  // hash and set to DB
   this.resetPasswordToken = crypto
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
 
-  // expire in 15 mins
   this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
 
-  return resetToken; // return RAW token
+  return resetToken;
 };
 
 export const User = mongoose.model("User", userSchema);

@@ -21,7 +21,7 @@ export const signupServices = async ({
 
   await user.save();
   const token = await user.getJWT();
-  // Send welcome email
+
   await sendWelcomeEmail(email, firstName);
   return { user, token };
 };
@@ -46,7 +46,6 @@ export const forgotPasswordService = async (email) => {
   const user = await User.findOne({ email });
   if (!user) throw new Error("User not found");
 
-  // Generate reset token
   const resetToken = user.getResetPasswordToken();
   await user.save({ validateBeforeSave: false });
 
@@ -63,8 +62,7 @@ export const forgotPasswordService = async (email) => {
 };
 
 //-------------------------- Reset Password ---------------------------------
-export const resetPasswordService = async (req, res) => {
-  // Hash token to compare with DB
+export const resetPasswordService = async (resetToken, password) => {
   const hashedToken = crypto
     .createHash("sha256")
     .update(resetToken)
@@ -72,12 +70,12 @@ export const resetPasswordService = async (req, res) => {
 
   const user = await User.findOne({
     resetPasswordToken: hashedToken,
-    resetPasswordExpire: { $gt: Date.now() }, // token not expired
+    resetPasswordExpire: { $gt: Date.now() }, 
   });
 
   if (!user) throw new Error("Invalid or expired token");
 
-  user.password = await bcrypt.hash(req.body.password, 10);
+  user.password = await bcrypt.hash(password, 10);
   user.resetPasswordToken = undefined;
   user.resetPasswordExpire = undefined;
 
